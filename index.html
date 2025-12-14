@@ -4,41 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flat Calculator</title>
-    
+
     <style>
-        /*
-        =========================================================
-        CSS STYLES
-        =========================================================
-        */
         :root {
-            /* Define CSS variables for easy theming */
-            --bg-color: #f5f5f5; /* Light grey background */
-            --calc-bg: #ffffff; /* White calculator background */
-            --digit-btn-bg: #e0e0e0; /* Light grey buttons */
-            --operator-btn-color: #ff9800; /* Orange for operators */
-            --clear-btn-color: #f44336; /* Red for Clear */
-            --equal-btn-color: #4CAF50; /* Green for Equal */
+            --bg-color: #f5f5f5;
+            --calc-bg: #ffffff;
+            --digit-btn-bg: #e0e0e0;
+            --operator-btn-color: #ff9800;
+            --clear-btn-color: #f44336;
+            --equal-btn-color: #4CAF50;
             --text-color: #333;
-            --display-color: #f0f0f0; /* Off-white display */
+            --display-color: #f0f0f0;
             --display-text-color: #333;
         }
 
         body {
             display: flex;
-            flex-direction: column; /* Stack title and calculator vertically */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: red;
-            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            font-family: Arial, sans-serif;
         }
 
         .title {
             font-size: 2.2em;
             font-weight: bold;
-            color: #4CAF50; /* Match the equal button color */
+            color: #4CAF50;
             margin-bottom: 20px;
             letter-spacing: 2px;
         }
@@ -46,10 +40,9 @@
         .calculator {
             width: 300px;
             padding: 20px;
-            border-radius: 15px; /* Slightly smaller border for a flatter look */
+            border-radius: 15px;
             background: var(--calc-bg);
-            /* --- SHADOW REMOVED HERE --- */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Simple, light drop shadow for contrast */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .display {
@@ -63,69 +56,44 @@
             height: 40px;
             line-height: 40px;
             overflow: hidden;
-            border: 1px solid #ccc; /* Simple border for definition */
-            /* --- SHADOW REMOVED HERE --- */
+            border: 1px solid #ccc;
         }
 
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px; /* Reduced gap for a tighter look */
+            gap: 12px;
         }
 
         button {
             border: none;
             padding: 20px;
             font-size: 1.2em;
-            border-radius: 8px; /* Smaller radius for flatter buttons */
+            border-radius: 8px;
             cursor: pointer;
-            outline: none;
-            color: var(--text-color);
             background: var(--digit-btn-bg);
-            /* --- SHADOW REMOVED HERE --- */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Simple lift shadow */
-            transition: background-color 0.1s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         button:hover {
             background-color: #d1d1d1;
         }
 
-        button:active {
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Simple inset for press effect */
-            transform: scale(0.98);
-        }
-
-        /* Styling for Operation Buttons */
         .operator {
             color: white;
             background-color: var(--operator-btn-color);
-            box-shadow: 0 2px 5px rgba(255, 152, 0, 0.4);
         }
-        
-        .operator:hover { background-color: #e68900; }
-        .operator:active { box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); }
 
-        /* Styling for Clear (AC) Button */
         .clear {
             color: white;
             background-color: var(--clear-btn-color);
-            box-shadow: 0 2px 5px rgba(244, 67, 54, 0.4);
         }
-        .clear:hover { background-color: #d32f2f; }
-        .clear:active { box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); }
 
-        /* Styling for Equal Button */
         .equal {
             color: white;
             background-color: var(--equal-btn-color);
-            grid-column: span 1;
-            box-shadow: 0 2px 5px rgba(76, 175, 80, 0.4);
         }
-        .equal:hover { background-color: #388e3c; }
-        .equal:active { box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); }
-        
-        /* The zero button spans 2 columns */
+
         .btn-0 {
             grid-column: span 2;
         }
@@ -137,7 +105,7 @@
 
     <div class="calculator">
         <div id="display" class="display">0</div>
-        
+
         <div class="buttons">
             <button class="clear" onclick="clearDisplay()">AC</button>
             <button class="operator" onclick="appendValue('(')">(</button>
@@ -166,54 +134,37 @@
     </div>
 
     <script>
-        /*
-        =========================================================
-        JAVASCRIPT LOGIC (Unchanged from previous version)
-        =========================================================
-        */
         const display = document.getElementById('display');
-        let currentInput = '0';
         let expression = '';
         let resultDisplayed = false;
 
         function updateDisplay() {
-            display.textContent = currentInput.length > 15 
-                ? currentInput.substring(0, 15) + '...'
-                : currentInput;
+            display.textContent = expression || '0';
         }
 
         function appendValue(value) {
             if (resultDisplayed) {
-                currentInput = (value === '.' || value === '(') ? '0' + value : value;
-                expression = '';
+                expression = value;
                 resultDisplayed = false;
-            } else if (currentInput === '0' && value !== '.') {
-                currentInput = value;
-            } else if (value === '.' && currentInput.includes('.')) {
-                return;
             } else {
-                currentInput += value;
+                expression += value;
             }
             updateDisplay();
         }
 
         function appendOperator(op) {
-            resultDisplayed = false;
-            expression += currentInput;
-            
-            const lastChar = expression.trim().slice(-1);
+            if (expression === '') return;
+
+            const lastChar = expression.slice(-1);
             if (['+', '-', '*', '/'].includes(lastChar)) {
-                 expression = expression.slice(0, -1) + op;
+                expression = expression.slice(0, -1) + op;
             } else {
-                 expression += op;
+                expression += op;
             }
-            
-            currentInput = '0';
             updateDisplay();
         }
 
         function clearDisplay() {
-            currentInput = '0';
             expression = '';
             resultDisplayed = false;
             updateDisplay();
@@ -221,32 +172,19 @@
 
         function calculateResult() {
             try {
-                let fullExpression = expression + currentInput;
-                fullExpression = fullExpression.replace(/÷/g, '/').replace(/×/g, '*');
-
-                let result = eval(fullExpression);
-
-                if (!isFinite(result)) {
-                    currentInput = "Error";
-                } else {
-                    currentInput = parseFloat(result.toFixed(10)).toString();
-                }
-
-                expression = '';
+                let result = eval(expression);
+                expression = parseFloat(result.toFixed(10)).toString();
                 resultDisplayed = true;
                 updateDisplay();
-
-            } catch (error) {
-                currentInput = "Error";
-                expression = '';
+            } catch {
+                expression = 'Error';
                 resultDisplayed = true;
                 updateDisplay();
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            updateDisplay();
-        });
+
+        updateDisplay();
     </script>
+
 </body>
 </html>
